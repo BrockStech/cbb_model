@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sportsreference.ncaab.teams import Teams
 from sportsreference.ncaab.schedule import Schedule
+from urllib.error import HTTPError
 
 
 class Model:
@@ -19,9 +20,12 @@ class Model:
         self.calculate()
 
     def pull_team_stats(self):
-        for team in self.teams.head(2):
-            for year in range(2015, 2017):
-                self.df = self.df.append(Schedule(team, year).dataframe_extended)
+        for team in self.teams:
+            for year in range(2015, 2021):
+                try:
+                    self.df = self.df.append(Schedule(team, year).dataframe_extended)
+                except HTTPError:
+                    print("HTTP Error")
 
     def clean_data(self):
         self.df = self.df.drop(columns=['home_ranking', 'away_ranking', 'date', 'location', 'losing_abbr',
