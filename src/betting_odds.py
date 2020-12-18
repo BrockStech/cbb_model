@@ -33,32 +33,34 @@ class BettingOdds:
         slate = []
         for event in self.get_events():
             game = Game()
-            slate.append(game)
             for team in self.get_competitors(event):
                 if self.is_home_team(team):
                     game.set_home_team(self.get_name(team))
                 else:
                     game.set_away_team(self.get_name(team))
             for display_group in self.get_display_groups(event):
-                for market in self.get_markets(display_group):
-                    if market['description'] == 'Moneyline':
-                        for betting_odd in market['outcomes']:
-                            if betting_odd['description'] == game.get_home_team():
-                                game.set_home_money_line(betting_odd['price']['american'])
-                            else:
-                                game.set_away_money_line(betting_odd['price']['american'])
-                    elif market['description'] == 'Point Spread':
-                        for betting_odd in market['outcomes']:
-                            if betting_odd['description'] == game.get_home_team():
-                                game.set_home_spread(betting_odd['price']['handicap'])
-                            else:
-                                game.set_away_spread(betting_odd['price']['handicap'])
-                    elif market['description'] == 'Total':
-                        for betting_odd in market['outcomes']:
-                            if betting_odd['description'] == 'Over':
-                                game.set_over(betting_odd['price']['handicap'])
-                            else:
-                                game.set_under(betting_odd['price']['handicap'])
+                if display_group['description'] == 'Game Lines':
+                    for market in self.get_markets(display_group):
+                        if market['description'] == 'Moneyline':
+                            for betting_odd in market['outcomes']:
+                                if betting_odd['description'] == game.get_home_team():
+                                    game.set_home_money_line(betting_odd['price']['american'])
+                                elif betting_odd['description'] == game.get_away_team():
+                                    game.set_away_money_line(betting_odd['price']['american'])
+                        elif market['description'] == 'Point Spread':
+                            for betting_odd in market['outcomes']:
+                                if betting_odd['description'] == game.get_home_team():
+                                    game.set_home_spread(betting_odd['price']['handicap'])
+                                elif betting_odd['description'] == game.get_away_team():
+                                    game.set_away_spread(betting_odd['price']['handicap'])
+                        elif market['description'] == 'Total':
+                            for betting_odd in market['outcomes']:
+                                if betting_odd['description'] == 'Over':
+                                    game.set_over(betting_odd['price']['handicap'])
+                                elif betting_odd['description'] == 'Under':
+                                    game.set_under(betting_odd['price']['handicap'])
+            if game.get_home_team() and game.get_away_team():
+                slate.append(game)
         return slate
                 
                 

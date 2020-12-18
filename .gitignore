@@ -1,8 +1,11 @@
 /shelf/
-/workspace.xml
 /.idea/
+/venv/
+/workspace.xml
 *.iml
 *.xml
-/venv/
+*.sav
+*.csv
+
 
 
